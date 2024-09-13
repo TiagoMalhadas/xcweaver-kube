@@ -19,7 +19,7 @@ import (
 	"github.com/TiagoMalhadas/xcweaver/runtime/tool"
 )
 
-// Commands returns the set of `weaver kube` commands, which can be run via
+// Commands returns the set of `xcweaver kube` commands, which can be run via
 // tool.Run.
 func Commands(opts impl.BabysitterOptions) map[string]*tool.Command {
 	return map[string]*tool.Command{

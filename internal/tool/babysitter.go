@@ -34,9 +34,9 @@ func babysitterCmd(opts impl.BabysitterOptions) *tool.Command {
 	return &tool.Command{
 		Name:        "babysitter",
 		Flags:       flag.NewFlagSet("babysitter", flag.ContinueOnError),
-		Description: "The weaver kubernetes babysitter",
+		Description: "The xcweaver kubernetes babysitter",
 		Help: `Usage:
-  weaver kube babysitter <weaver config file> <babysitter config file> <component>...
+  xcweaver kube babysitter <xcweaver config file> <babysitter config file> <component>...
 
 Flags:
   -h, --help   Print this help message.`,
@@ -68,7 +68,7 @@ Flags:
 	}
 }
 
-// parseWeaverConfig parses a weaver.toml config file.
+// parseWeaverConfig parses a xcweaver.toml config file.
 func parseWeaverConfig(filename string) (*protos.AppConfig, error) {
 	contents, err := os.ReadFile(filename)
 	if err != nil {
@@ -79,7 +79,7 @@ func parseWeaverConfig(filename string) (*protos.AppConfig, error) {
 		return nil, fmt.Errorf("parse config file %q: %w", filename, err)
 	}
 	// Rewrite the app config to point to the binary in the container.
-	app.Binary = fmt.Sprintf("/weaver/%s", filepath.Base(app.Binary))
+	app.Binary = fmt.Sprintf("/xcweaver/%s", filepath.Base(app.Binary))
 	if _, err := os.Stat(app.Binary); errors.Is(err, os.ErrNotExist) {
 		return nil, fmt.Errorf("binary %q doesn't exist", app.Binary)
 	}

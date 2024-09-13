@@ -27,14 +27,14 @@ import (
 var versionCmd = tool.Command{
 	Name:        "version",
 	Flags:       flag.NewFlagSet("version", flag.ContinueOnError),
-	Description: "Show weaver kube version",
-	Help:        "Usage:\n  weaver kube version",
+	Description: "Show xcweaver kube version",
+	Help:        "Usage:\n  xcweaver kube version",
 	Fn: func(context.Context, []string) error {
 		version, _, err := impl.ToolVersion()
 		if err != nil {
 			return err
 		}
-		fmt.Printf("weaver kube %s %s/%s\n", version, runtime.GOOS, runtime.GOARCH)
+		fmt.Printf("xcweaver kube %s %s/%s\n", version, runtime.GOOS, runtime.GOARCH)
 		return nil
 	},
 }

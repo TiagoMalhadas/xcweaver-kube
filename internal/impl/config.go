@@ -20,7 +20,7 @@ import (
 )
 
 // kubeConfig contains the kubernetes configuration for a Service Weaver
-// application deployed with `weaver kube deploy`.
+// application deployed with `xcweaver kube deploy`.
 type kubeConfig struct {
 	// Path to the app config file.
 	AppConfig string
@@ -47,7 +47,7 @@ type kubeConfig struct {
 	// Repo is the name of the repository where the container image is uploaded.
 	//
 	// For example, if Image is "mycontainer:v1" and Repo is
-	// "docker.io/alanturing", then "weaver kube deploy" will build the image
+	// "docker.io/alanturing", then "xcweaver kube deploy" will build the image
 	// locally as "mycontainer:v1" and then push it to
 	// "docker.io/alanturing/mycontainer:v1".
 	//

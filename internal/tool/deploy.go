@@ -29,24 +29,24 @@ var (
 		Name:        "deploy",
 		Description: "Deploy a Service Weaver app",
 		Help: `Usage:
-  weaver kube deploy <config file>
+  xcweaver kube deploy <config file>
 
 Flags:
   -h, --help	Print this help message.
 
-  "weaver kube deploy" builds a container image locally for a given app binary,
+  "xcweaver kube deploy" builds a container image locally for a given app binary,
   and optionally uploads it to a container repository. The app specification is
   provided in a ".toml" file using the "appConfig" field. The name of the image
   and the repository to which the image is uploaded are specified using the
   "image" and "repo" fields. For example, consider the
   following config file:
       "---- config.yaml ----"
-      appConfig: "weaver.toml"
+      appConfig: "xcweaver.toml"
 
       image: "foo:0.0.1"
       repo: "docker.io/my_docker_hub_username"
 
-  Using this config file, "weaver kube deploy" will build an image named
+  Using this config file, "xcweaver kube deploy" will build an image named
   "foo:0.0.1" and upload it to "docker.io/my_docker_hub_username/foo:0.0.1". If
   the "image" field is not specified, the image name defaults to
   "<app_name>:<app_version>". If the "repo" field is not specified, the
@@ -159,7 +159,7 @@ Flags:
 		Flags: flags,
 		Fn: func(ctx context.Context, args []string) error {
 			if len(args) != 1 {
-				return fmt.Errorf("usage: weaver kube deploy <config file>")
+				return fmt.Errorf("usage: xcweaver kube deploy <config file>")
 			}
 			return impl.Deploy(ctx, args[0])
 		},

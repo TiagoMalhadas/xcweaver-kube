@@ -39,8 +39,8 @@ type Plugins struct {
 	HandleMetrics func(context.Context, []*metrics.MetricSnapshot) error
 }
 
-// Run runs the "weaver-kube" binary. You can provide Run a set of Plugins to
-// customize the behavior of "weaver-kube". The provided name is the name of
+// Run runs the "xcweaver-kube" binary. You can provide Run a set of Plugins to
+// customize the behavior of "xcweaver-kube". The provided name is the name of
 // the custom binary.
 func Run(name string, plugins Plugins) {
 	swtool.Run(name, tool.Commands(impl.BabysitterOptions(plugins)))

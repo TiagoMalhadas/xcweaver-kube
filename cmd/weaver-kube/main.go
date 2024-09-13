@@ -21,5 +21,5 @@ import (
 )
 
 func main() {
-	swtool.Run("weaver kube", tool.Commands(impl.BabysitterOptions{}))
+	swtool.Run("xcweaver kube", tool.Commands(impl.BabysitterOptions{}))
 }

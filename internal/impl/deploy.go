@@ -85,7 +85,7 @@ func Deploy(ctx context.Context, configFilename string) error {
 	}
 
 	if config.Repo == "" {
-		fmt.Fprintln(os.Stderr, "No container repo specified in the config file. The container image will only be accessible locally. See `weaver kube deploy --help` for details.")
+		fmt.Fprintln(os.Stderr, "No container repo specified in the config file. The container image will only be accessible locally. See `xcweaver kube deploy --help` for details.")
 	}
 	switch config.BuildTool {
 	case "docker", "podman":
@@ -137,7 +137,7 @@ func Deploy(ctx context.Context, configFilename string) error {
 	return generateYAMLs(app, config, depId, image)
 }
 
-// checkVersionCompatibility checks that the `weaver kube` binary is compatible
+// checkVersionCompatibility checks that the `xcweaver kube` binary is compatible
 // with the application binary being deployed.
 func checkVersionCompatibility(appBinary string) error {
 	// Read the versions of the application binary.
@@ -146,7 +146,7 @@ func checkVersionCompatibility(appBinary string) error {
 		return fmt.Errorf("read versions: %w", err)
 	}
 
-	// Read the versions of the 'weaver kube' binary (i.e. the currently
+	// Read the versions of the 'xcweaver kube' binary (i.e. the currently
 	// running binary).
 	tool, err := os.Executable()
 	if err != nil {
@@ -158,7 +158,7 @@ func checkVersionCompatibility(appBinary string) error {
 	}
 	selfVersion, _, err := ToolVersion()
 	if err != nil {
-		return fmt.Errorf("read weaver-kube version: %w", err)
+		return fmt.Errorf("read xcweaver-kube version: %w", err)
 	}
 
 	// Try to relativize the binary, defaulting to the absolute path if there
@@ -179,16 +179,16 @@ func checkVersionCompatibility(appBinary string) error {
 		return fmt.Errorf(`
 ERROR: The binary you're trying to deploy (%q) was built with
 github.com/TiagoMalhadas/xcweaver module version %s (internal version %s).
-However, the 'weaver-kube' binary you're using (%s) was built with weaver
+However, the 'xcweaver-kube' binary you're using (%s) was built with xcweaver
 module version %s (internal version %s). These versions are incompatible.
 
-We recommend updating both the weaver module your application is built with and
-updating the 'weaver-kube' command by running the following.
+We recommend updating both the xcweaver module your application is built with and
+updating the 'xcweaver-kube' command by running the following.
 
 	go get github.com/TiagoMalhadas/xcweaver@latest
-	go install github.com/TiagoMalhadas/xcweaver-kube/cmd/weaver-kube@latest
+	go install github.com/TiagoMalhadas/xcweaver-kube/cmd/xcweaver-kube@latest
 
-Then, re-build your code and re-run 'weaver-kube deploy'. If the problem
+Then, re-build your code and re-run 'xcweaver-kube deploy'. If the problem
 persists, please file an issue at https://github.com/TiagoMalhadas/xcweaver/issues`,
 			relativize(appBinary), appBinaryVersions.ModuleVersion, appBinaryVersions.DeployerVersion, selfVersion, weaverKubeVersions.ModuleVersion, version.DeployerVersion)
 	}

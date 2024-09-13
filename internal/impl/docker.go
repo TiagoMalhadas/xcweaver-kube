@@ -81,7 +81,7 @@ func buildImage(ctx context.Context, app *protos.AppConfig, depId string, opts d
 	//    Dockerfile   - Docker build instructions
 
 	// Create workDir/.
-	workDir, err := os.MkdirTemp("", "weaver-kube")
+	workDir, err := os.MkdirTemp("", "xcweaver-kube")
 	if err != nil {
 		return "", err
 	}
@@ -92,8 +92,8 @@ func buildImage(ctx context.Context, app *protos.AppConfig, depId string, opts d
 		return "", err
 	}
 
-	// Copy the "weaver-kube" binary into workDir/ if the binary can run in the
-	// container. Otherwise, we'll install the "weaver-kube" binary inside the
+	// Copy the "xcweaver-kube" binary into workDir/ if the binary can run in the
+	// container. Otherwise, we'll install the "xcweaver-kube" binary inside the
 	// container.
 	toolVersion, toolIsDev, err := ToolVersion()
 	if err != nil {
@@ -103,36 +103,36 @@ func buildImage(ctx context.Context, app *protos.AppConfig, depId string, opts d
 	if err != nil {
 		return "", err
 	}
-	install := "" // "weaver-kube" binary to install, if any
+	install := "" // "xcweaver-kube" binary to install, if any
 	if runtime.GOOS == "linux" && runtime.GOARCH == "amd64" {
-		// The "weaver-kube" binary can run inside the container, so copy it.
+		// The "xcweaver-kube" binary can run inside the container, so copy it.
 		if err := cp(tool, filepath.Join(workDir, filepath.Base(tool))); err != nil {
 			return "", err
 		}
 	} else if toolIsDev {
-		// The "weaver-kube" binary has local modifications, but it cannot be
+		// The "xcweaver-kube" binary has local modifications, but it cannot be
 		// copied into the container. In this case, we install the latest
-		// version of "weaver-kube" in the container, if approved by the user.
+		// version of "xcweaver-kube" in the container, if approved by the user.
 		scanner := bufio.NewScanner(os.Stdin)
 		fmt.Print(
-			`The running weaver-kube binary hasn't been cross-compiled for linux/amd64 and
-cannot run inside the container. Instead, the latest weaver-kube binary will be
+			`The running xcweaver-kube binary hasn't been cross-compiled for linux/amd64 and
+cannot run inside the container. Instead, the latest xcweaver-kube binary will be
 downloaded and installed in the container. Do you want to proceed? [Y/n] `)
 		scanner.Scan()
 		text := scanner.Text()
 		if text != "" && text != "y" && text != "Y" {
 			return "", fmt.Errorf("user bailed out")
 		}
-		install = "github.com/TiagoMalhadas/xcweaver-kube/cmd/weaver-kube@latest"
+		install = "github.com/TiagoMalhadas/xcweaver-kube/cmd/xcweaver-kube@latest"
 	} else {
-		// Install the currently running version of "weaver-kube" in the
+		// Install the currently running version of "xcweaver-kube" in the
 		// container.
-		install = "github.com/TiagoMalhadas/xcweaver-kube/cmd/weaver-kube@" + toolVersion
+		install = "github.com/TiagoMalhadas/xcweaver-kube/cmd/xcweaver-kube@" + toolVersion
 	}
 
 	// Create a Dockerfile in workDir/.
 	type content struct {
-		Install    string // "weaver-kube" binary to install, if any
+		Install    string // "xcweaver-kube" binary to install, if any
 		Entrypoint string // container entrypoint
 		BaseImage  string // Name of the base image used to build the container
 	}
@@ -143,10 +143,10 @@ RUN go install "{{.Install}}"
 {{end}}
 
 FROM {{.BaseImage}}
-WORKDIR /weaver/
+WORKDIR /xcweaver/
 COPY . .
 {{if .Install }}
-COPY --from=builder /go/bin/ /weaver/
+COPY --from=builder /go/bin/ /xcweaver/
 {{end}}
 ENTRYPOINT ["{{.Entrypoint}}"]
 `))
@@ -157,9 +157,9 @@ ENTRYPOINT ["{{.Entrypoint}}"]
 	defer dockerFile.Close()
 	c := content{Install: install}
 	if install != "" {
-		c.Entrypoint = "/weaver/weaver-kube"
+		c.Entrypoint = "/xcweaver/xcweaver-kube"
 	} else {
-		c.Entrypoint = filepath.Join("/weaver", filepath.Base(tool))
+		c.Entrypoint = filepath.Join("/xcweaver", filepath.Base(tool))
 	}
 	c.BaseImage = opts.baseImage
 	if err := template.Execute(dockerFile, c); err != nil {
