@@ -82,6 +82,9 @@ type kubeConfig struct {
 	// config, default options will be used.
 	Listeners []listenerSpec
 
+	// Options for the application Antipode agents.
+	AntipodeAgents []listenerSpec
+
 	// Resource requirements needed to run the pods. Note that the resources should
 	// satisfy the format specified in [1].
 	//
@@ -138,6 +141,32 @@ type listenerSpec struct {
 	// is reachable. If zero or not specified, the first available port
 	// is used.
 	Port int32
+}
+
+// antipodeAgentSpec stores configuration options for a Antipode agent.
+type antipodeAgentSpec struct {
+	// Antipode agent name.
+	Name string
+
+	// If specified, the listener service will have the name set to this value.
+	// Otherwise, we will generate a unique name for each app version.
+	DatastoreType string
+
+	// Is the listener public, i.e., should it receive ingress traffic
+	// from the public internet. If false, the listener is configured only
+	// for cluster-internal access.
+	Host string
+
+	// If specified, the port inside the container on which the listener
+	// is reachable. If zero or not specified, the first available port
+	// is used.
+	Port int32
+
+	User string
+
+	Password string
+
+	Datastore string
 }
 
 // Encapsulates probe specs as defined by the user in the kubernetes config.
