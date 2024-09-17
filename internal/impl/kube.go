@@ -24,11 +24,12 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 
-	"github.com/TiagoMalhadas/xcweaver/runtime/bin"
-	"github.com/TiagoMalhadas/xcweaver/runtime/protos"
+	"github.com/XCWeaver/xcweaver/runtime/bin"
+	"github.com/XCWeaver/xcweaver/runtime/protos"
 	"github.com/google/uuid"
 	"golang.org/x/exp/maps"
 	"google.golang.org/protobuf/encoding/prototext"
@@ -578,16 +579,23 @@ func generateConfigMap(w io.Writer, configFilename string, d deployment) error {
 		}
 	}
 
+	//mapping Antipode agents names to Antipode agents implementation
+	antipodeAgents := map[string]*AntipodeAgentOptions{}
+	for _, a := range d.config.AntipodeAgents {
+		antipodeAgents[a.Name] = &AntipodeAgentOptions{DatastoreType: a.DatastoreType, Host: a.Host, Port: strconv.FormatInt(int64(a.Port), 10), User: a.User, Password: a.Password, Datastore: a.Datastore}
+	}
+
 	exportInterval, err := time.ParseDuration(d.config.Telemetry.Metrics.ExportInterval)
 	if err != nil {
 		return fmt.Errorf("unable to parse metrics export interval: %v", err)
 	}
 
 	babysitterConfig := &BabysitterConfig{
-		Namespace:    d.config.Namespace,
-		DeploymentId: d.deploymentId,
-		Listeners:    listeners,
-		Groups:       groups,
+		Namespace:      d.config.Namespace,
+		DeploymentId:   d.deploymentId,
+		Listeners:      listeners,
+		AntipodeAgents: antipodeAgents,
+		Groups:         groups,
 		Telemetry: &Telemetry{
 			Metrics: &MetricOptions{
 				AutoGenerateMetrics: d.config.Telemetry.Metrics.Generated,
